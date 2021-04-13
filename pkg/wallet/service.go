@@ -133,3 +133,18 @@ func (s *Service) Reject(paymentID string) error {
 
 	return nil
 }
+
+// Repeat позволает по идентификатору повторить платёж
+func (s *Service) Repeat(paymentID string) (*types.Payment, error) {
+	pay, err := s.FindPaymentByID(paymentID)
+	if err != nil {
+		return nil, err
+	}
+
+	payment, err := s.Pay(pay.AccountID, pay.Amount, pay.Category)
+	if err != nil {
+		return nil, err
+	}
+
+	return payment, nil
+}
